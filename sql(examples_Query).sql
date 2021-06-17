@@ -123,6 +123,7 @@
 --     OR LastName LIKE'_y%')
 -- );
 -- SET SQL_SAFE_UPDATES=1;
+-- SELECT * FROM client WHERE REGEXP_LIKE(LastName, '^.[e,o,i,a,u]');
 -- ------------------------------------------------------------
 -- *Знайти львівські відділення, які видали кредитів на загальну суму більше ніж 5000
 -- SELECT DepartmentCity, sum FROM application
