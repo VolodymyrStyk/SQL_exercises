@@ -1,6 +1,5 @@
 -- 1. +Вибрати усіх клієнтів, чиє ім'я має менше ніж 6 символів.
--- SELECT * FROM client
--- WHERE FirstName LIKE '______';
+-- SELECT * FROM client WHERE LENGTH(FirstName)  < 6;
 
 -- 2. +Вибрати львівські відділення банку.+
 -- SELECT * FROM department
@@ -18,12 +17,16 @@
 
 -- 5. +Вивести усіх клієнтів, чиє прізвище закінчується на OV чи OVA.
 -- SELECT * FROM client
--- WHERE LastName LIKE '%k'
--- OR  LastName LIKE '%v';
+-- WHERE LastName LIKE '%ov'
+-- OR  LastName LIKE '%ova';
 
 -- 6. +Вивести клієнтів банку, які обслуговуються київськими відділеннями.
 -- SELECT * FROM client
 -- WHERE Department_idDepartment = 1 OR Department_idDepartment = 4;
+-- Варіант 2
+-- SELECT c.FirstName ,c.LastName, c.Passport, d.DepartmentCity FROM client c, department d
+-- WHERE d.DepartmentCity = 'Kyiv'
+-- GROUP BY c.Passport;
 
 -- 7. +Вивести імена клієнтів та їхні номера телефону, погрупувавши їх за іменами.
 -- SELECT idClient, FirstName FROM client
@@ -36,8 +39,13 @@
 
 -- 9. +Порахувати кількість клієнтів усіх відділень та лише львівських відділень.
 -- SELECT COUNT(Passport) 'AllClients' FROM client ;
+-- Варіант 1
 -- SELECT COUNT(Department_idDepartment) 'LvivClients' FROM client
 -- WHERE Department_idDepartment = 2 OR Department_idDepartment = 5;
+-- Варіант 2
+-- SELECT COUNT(c.Passport) 'Lviv clients' FROM client c
+-- JOIN department d ON c.Department_idDepartment = d.idDepartment
+-- WHERE d.DepartmentCity = 'Lviv';
 
 -- 10. Знайти кредити, які мають найбільшу суму для кожного клієнта окремо.
 -- SELECT a.Client_idClient, c.FirstName, c.LastName,  MAX(a.Sum)
@@ -93,6 +101,11 @@
 -- UPDATE client AS c
 -- SET c.City = 'Kyiv'
 -- WHERE c.Department_idDepartment IN(1,4);
+-- Варіант 2
+-- UPDATE client c
+-- JOIN department d ON c.Department_idDepartment = d.idDepartment
+-- SET c.City = 'Kyiv'
+-- WHERE d.DepartmentCity = 'Kyiv';
 
 -- 19. Видалити усі кредити, які є повернені.
 -- DELETE FROM application
@@ -111,13 +124,13 @@
 -- );
 -- SET SQL_SAFE_UPDATES=1;
 -- ------------------------------------------------------------
--- Знайти львівські відділення, які видали кредитів на загальну суму більше ніж 5000
+-- *Знайти львівські відділення, які видали кредитів на загальну суму більше ніж 5000
 -- SELECT DepartmentCity, sum FROM application
 -- JOIN client c ON application.Client_idClient = c.idClient
 -- JOIN department d ON c.Department_idDepartment = d.idDepartment
 -- WHERE d.DepartmentCity = 'Lviv' AND Sum > 5000;
 
--- Знайти клієнтів, які повністю погасили кредити на суму більше ніж 5000
+-- *Знайти клієнтів, які повністю погасили кредити на суму більше ніж 5000
 -- SELECT FirstName, LastName, sum, Currency FROM client
 -- JOIN application a ON client.idClient = a.Client_idClient
 -- WHERE CreditState = 'returned' AND sum >5000;
@@ -143,7 +156,7 @@
 -- 	LIMIT 1
 -- );
 
---#місто чувака який набрав найбільше кредитів
+-- *#місто чувака який набрав найбільше кредитів
 -- SELECT c.City, c.FirstName, c.LastName, a.Sum FROM client c
 -- JOIN application a ON c.idClient = a.Client_idClient
 -- ORDER BY a.Sum DESC
