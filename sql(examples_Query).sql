@@ -131,10 +131,20 @@
 -- FROM application a, client c;
 
 /*Знайти кредити, сума яких більша за середнє значення усіх кредитів*/
-
+-- SELECT * FROM application
+-- WHERE Sum > (SELECT avg(Sum) FROM application);
 
 /*Знайти клієнтів, які є з того самого міста, що і клієнт, який взяв найбільшу кількість кредитів*/
-
+-- SELECT FirstName, LastName, City FROM client
+-- WHERE City = (
+-- 	SELECT c.City FROM client c
+-- 	JOIN application a ON c.idClient = a.Client_idClient
+-- 	ORDER BY a.Sum DESC
+-- 	LIMIT 1
+-- );
 
 --#місто чувака який набрав найбільше кредитів
-
+-- SELECT c.City, c.FirstName, c.LastName, a.Sum FROM client c
+-- JOIN application a ON c.idClient = a.Client_idClient
+-- ORDER BY a.Sum DESC
+-- LIMIT 1;
